@@ -1,0 +1,14 @@
+.root {
+	max-width: 550px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	align-items: center;
+	text-align: center;
+}
+.img {
+	width: 270px;
+	height: 200px;
+	margin-top: 20px;
+	margin-bottom: 25px;
+}

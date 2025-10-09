@@ -1,0 +1,66 @@
+.button-open {
+	padding: 0;
+	margin: 0;
+	width: 24px;
+	height: 24px;
+	background-color: transparent;
+	color: #fff;
+	border: none;
+}
+.icon-button-open {
+	color: #fff;
+	margin: 0;
+	padding: 0;
+	font-size: 20px;
+	position: relative;
+	bottom: 5px;
+}
+.menu-window {
+	box-sizing: border-box;
+	padding: 25px 25px 50px 25px;
+	background-color: #26302e;
+	width: 100%;
+	height: auto;
+	display: none;
+	flex-direction: column;
+	justify-content: space-between;
+	gap: 110px;
+	border-radius: 0 0 10px 10px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 2000;
+}
+/*para abrir el menu y mostrar el contenido*/
+.menu-window.open {
+	display: inherit;
+}
+.button-close {
+	background-color: transparent;
+	color: #fff;
+	border: none;
+	width: 16px;
+	height: 16px;
+	align-self: flex-end;
+	font-size: 20px;
+}
+.logged,
+.not-logged {
+	display: flex;
+	flex-direction: column;
+	gap: 60px;
+	text-align: center;
+}
+
+.option-footer {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	text-align: center;
+}
+.option-logout {
+	color: #3b97d3;
+	font-size: 16px;
+	font-weight: 500;
+	font-family: "Roboto";
+}

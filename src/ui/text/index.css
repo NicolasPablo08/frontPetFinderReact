@@ -1,0 +1,44 @@
+* {
+	font-family: "poppins";
+	margin: 0;
+	padding: 0;
+}
+.rootTitle {
+	font-size: 36px;
+	font-weight: 700;
+}
+.rootSubtitle {
+	font-size: 24px;
+	font-weight: 400;
+}
+.rootSubtitleBold {
+	font-size: 24px;
+	font-weight: 700;
+}
+.rootText {
+	font-size: 16px;
+	font-weight: 400;
+}
+.rootTextBold {
+	font-size: 16px;
+	font-weight: 700;
+	font-family: "roboto";
+}
+.rootLink {
+	font-size: 16px;
+	font-weight: 500;
+	font-family: "roboto";
+	color: #3b97d3;
+}
+.rootLinkMenu {
+	margin: 0;
+	padding: 0;
+	color: #ffffff;
+	text-decoration: none;
+	font-size: 24px;
+	font-weight: 700;
+	font-family: "Poppins";
+}
+.white {
+	color: white;
+}

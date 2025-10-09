@@ -1,0 +1,37 @@
+.root {
+	display: flex;
+	width: 314px;
+	margin: 0;
+	padding: 25px 20px;
+	background-color: #26302e;
+	border-radius: 10px;
+	flex-direction: column;
+	gap: 7px;
+	position: fixed;
+	z-index: 2;
+	bottom: 50px;
+}
+/*para abrir el formulario y mostrar el contenido*/
+.root.open {
+	display: flex;
+}
+.close-button {
+	background-color: transparent;
+	color: #fff;
+	border: none;
+	width: 16px;
+	height: 16px;
+	align-self: flex-end;
+	font-size: 20px;
+}
+.form {
+	display: flex;
+	flex-direction: column;
+	gap: 25px;
+}
+.status {
+	position: fixed;
+	bottom: 200px; /* para que quede arriba del formulario que está a 50px */
+	right: 100px; /* o donde quieras ubicarlo */
+	z-index: 3;
+}
