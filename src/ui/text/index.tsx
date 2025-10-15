@@ -14,6 +14,7 @@ type TextProps = {
 	children: React.ReactNode; //para que el label pueda tener íconos u otro contenido, lo ideal es usar React.ReactNode
 	href?: string; //para el link
 	className?: string; //para poder añadirle clases extra donde lo utilicemos, falta agregar la props al className
+	onClick?: () => void;
 };
 
 function Text(props: TextProps) {
@@ -60,6 +61,7 @@ function Text(props: TextProps) {
 		<a
 			className={`${css.rootLink} ${css[props.style]} ${props.className || ""}`}
 			href={props.href}
+			onClick={props.onClick}
 		>
 			{props.children}
 		</a>
@@ -69,6 +71,7 @@ function Text(props: TextProps) {
 				props.className || ""
 			}`}
 			href={props.href}
+			onClick={props.onClick}
 		>
 			{props.children}
 		</a>

@@ -5,7 +5,7 @@ import { AppRoutes } from "./router";
 
 const root = document.getElementById("root");
 ReactDom.createRoot(root).render(
-  <BrowserRouter>
-    <AppRoutes />
-  </BrowserRouter>
+	<BrowserRouter>
+		<AppRoutes />
+	</BrowserRouter>
 );

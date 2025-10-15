@@ -5,8 +5,13 @@
 	background-color: #f0f0f0;
 	border-radius: 10px;
 	border: solid 2px black;
-	display: flex;
+	/* display: flex; */
 	flex-direction: column;
 	justify-content: center;
 	text-align: center;
+	position: fixed; /* Fija la posición en la pantalla */
+	top: 50%; /* Centra verticalmente */
+	left: 50%; /* Centra horizontalmente */
+	transform: translate(-50%, -50%); /* Ajusta el centro */
+	z-index: 999; /* Asegura que este por encima de otros elementos */
 }
