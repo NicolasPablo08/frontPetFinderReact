@@ -1,11 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as css from "./index.css";
 import { Text } from "../../ui/text";
+import { useLogIn } from "../../hooks/user-hooks";
 
 type MenuProps = {};
 function Menu(props: MenuProps) {
 	const [isOpen, setIsOpen] = useState(false); //estado para controlar la apertura y cierre del menu
 	const [isLogged, setIsLogged] = useState(false); //estado para mostrar el menu que corresponda segun el usuario este logueado o no
+	const [email, setEmail] = useState("");
+	const { logOut } = useLogIn();
+	useEffect(() => {
+		const token = localStorage.getItem("userToken");
+		if (token) {
+			setEmail(localStorage.getItem("userEmail") || "");
+			setIsLogged(true);
+		}
+	}, []); // Solo se ejecuta una vez al montar el componente
 	function openMenu() {
 		setIsOpen(true);
 	}
@@ -26,7 +36,7 @@ function Menu(props: MenuProps) {
 				<div className={css["menu-options"]}>
 					{isLogged ? (
 						<div className={css["logged"]}>
-							<Text href="/perfil" variant="linkMenu">
+							<Text href="/profile" variant="linkMenu">
 								{" "}
 								Mi perfil
 							</Text>
@@ -39,8 +49,8 @@ function Menu(props: MenuProps) {
 								Mis mascotas <br /> reportadas
 							</Text>
 							<div className={css["option-footer"]}>
-								<Text variant="text"> email@email.com </Text>
-								<a href="" className={css["option-logout"]}>
+								<Text variant="text"> {email || "email@email.com"} </Text>
+								<a href="" onClick={logOut} className={css["option-logout"]}>
 									CERRAR SESIÓN
 								</a>
 							</div>

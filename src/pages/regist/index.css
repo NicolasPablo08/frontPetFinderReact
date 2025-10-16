@@ -26,3 +26,9 @@
 	justify-content: center;
 	gap: 5px;
 }
+.status {
+	display: none;
+}
+.status-error {
+	display: flex;
+}

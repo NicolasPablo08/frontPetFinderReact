@@ -25,7 +25,7 @@ function Login() {
 			setErrorClass("status-error");
 			setTimeout(() => {
 				setErrorClass("status");
-			}, 4000);
+			}, 3000);
 			return;
 		}
 		const result = await logIn(data.email, data.password);
@@ -34,6 +34,7 @@ function Login() {
 			navigate("/profile");
 		} else {
 			setErrorClass("status-error");
+			setError(result.message);
 			setTimeout(() => {
 				setErrorClass("status");
 			}, 4000);
