@@ -4,6 +4,7 @@ import { Text } from "../../ui/text";
 import * as css from "./index.css";
 import { useNavigate } from "react-router";
 import { useLogIn } from "../../hooks/user-hooks";
+
 function Profile() {
 	const { user, logOut } = useLogIn();
 	const navigate = useNavigate();
@@ -39,7 +40,11 @@ function Profile() {
 				>
 					Modificar contraseña
 				</Button>
-				<Button type="button" style="green" onClick={() => goTo("/my-reports")}>
+				<Button
+					type="button"
+					style="green"
+					onClick={() => goTo("/my-pets-lost")}
+				>
 					Mis reportes
 				</Button>
 			</div>

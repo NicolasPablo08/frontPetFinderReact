@@ -18,12 +18,3 @@
 	padding-top: 30px;
 	margin-bottom: 30px;
 }
-.blur-container {
-	transition: filter 0.2s ease;
-}
-.form-open {
-	filter: blur(
-		5px
-	); /* Aplica un desenfoque al fondo  cuando esta presente el form*/
-	pointer-events: none; /* desactiva los clicks del mouse cuando esta presente el form*/
-}

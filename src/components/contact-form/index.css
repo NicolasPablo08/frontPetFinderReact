@@ -9,7 +9,7 @@
 	gap: 7px;
 	position: fixed;
 	z-index: 2;
-	bottom: 50px;
+	bottom: 100px;
 }
 /*para abrir el formulario y mostrar el contenido*/
 .root.open {

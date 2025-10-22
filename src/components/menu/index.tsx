@@ -44,7 +44,7 @@ function Menu(props: MenuProps) {
 								{" "}
 								Reportar mascota
 							</Text>
-							<Text href="/my-reports" variant="linkMenu">
+							<Text href="/my-pets-lost" variant="linkMenu">
 								{" "}
 								Mis mascotas <br /> reportadas
 							</Text>
