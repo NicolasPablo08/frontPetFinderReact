@@ -9,21 +9,25 @@ import { EditProfile } from "../pages/edit-profile";
 import { ResetPassword } from "../pages/reset-password";
 import { EnterEmail } from "../pages/reset-pass-enter-email";
 import { EnterCode } from "../pages/reset-pass-enter-code";
+import { SearchPets } from "../pages/search-pets";
+import { PetsNearby } from "../pages/pets-nearby";
 
 function AppRoutes() {
-	return (
-		<Routes>
-			<Route path="/" element={<Layout />}>
-				<Route index element={<HomePage />} />
-				<Route path="login" element={<Login />} />
-				<Route path="profile" element={<Profile />} />
-				<Route path="regist" element={<Regist />} />
-				<Route path="edit-profile" element={<EditProfile />} />
-				<Route path="reset-password" element={<ResetPassword />} />
-				<Route path="enter-email" element={<EnterEmail />} />
-				<Route path="enter-code" element={<EnterCode />} />
-			</Route>
-		</Routes>
-	);
+  return (
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<HomePage />} />
+        <Route path="login" element={<Login />} />
+        <Route path="profile" element={<Profile />} />
+        <Route path="regist" element={<Regist />} />
+        <Route path="edit-profile" element={<EditProfile />} />
+        <Route path="reset-password" element={<ResetPassword />} />
+        <Route path="enter-email" element={<EnterEmail />} />
+        <Route path="enter-code" element={<EnterCode />} />
+        <Route path="search-pets" element={<SearchPets />} />
+        <Route path="pets-nearby" element={<PetsNearby />} />
+      </Route>
+    </Routes>
+  );
 }
 export { AppRoutes };

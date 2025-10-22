@@ -1,0 +1,28 @@
+.root {
+  box-sizing: border-box;
+  min-height: calc(100vh - 60px);
+  width: 100%;
+  margin: 0;
+  padding: 40px 20px 70px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
+  position: relative;
+}
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px; /* Espacio entre las cards */
+  padding-top: 30px;
+  margin-bottom: 30px;
+}
+/* 🟢 Esta capa se blurea */
+.blur-container {
+  transition: filter 0.2s ease;
+}
+.form-open {
+  filter: blur(5px); /* Aplica un desenfoque al fondo  cuando esta presente el form*/
+  pointer-events: none; /* desactiva los clicks del mouse cuando esta presente el form*/
+}
