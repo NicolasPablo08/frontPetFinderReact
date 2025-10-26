@@ -12,7 +12,7 @@ function EnterCode() {
 	const { register, handleSubmit } = useForm();
 	const [error, setError] = useState("");
 	const [errorClass, setErrorClass] = useState("status");
-	const { sendCode, status, message } = useSendCodePassword();
+	const { sendCode } = useSendCodePassword();
 
 	//contador de tiempo
 	const [timeLeft, setTimeLeft] = useState(55); // Estado para el temporizador
@@ -39,7 +39,7 @@ function EnterCode() {
 	}, [timeLeft, navigate]);
 
 	async function formSubmit(data) {
-		console.log(data);
+		//console.log(data);
 		const result = await sendCode(data.codigo);
 		if (result.status === "success") {
 			navigate("/reset-password");

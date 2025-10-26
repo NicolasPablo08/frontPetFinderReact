@@ -12,9 +12,9 @@ function EnterEmail() {
 	const { register, handleSubmit } = useForm();
 	const [error, setError] = useState("");
 	const [errorClass, setErrorClass] = useState("status");
-	const { getCode, status, message } = useGetCodePassword();
+	const { getCode } = useGetCodePassword();
+
 	async function formSubmit(data) {
-		console.log(data);
 		const result = await getCode(data.email);
 		if (result.status === "success") {
 			navigate("/enter-code");

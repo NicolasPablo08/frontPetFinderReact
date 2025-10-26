@@ -11,7 +11,7 @@ function EditProfile() {
 	const navigate = useNavigate();
 	const [error, setError] = useState("");
 	const [errorClass, setErrorClass] = useState("status");
-	const { user, setDataUser, status, message } = useSetDataUser();
+	const { user, setDataUser } = useSetDataUser();
 	const { register, handleSubmit } = useForm({
 		defaultValues: {
 			nombre: user.name,

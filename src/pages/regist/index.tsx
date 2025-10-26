@@ -13,9 +13,9 @@ function Regist() {
 	const { register, handleSubmit } = useForm();
 	const [error, setError] = useState("");
 	const [errorClass, setErrorClass] = useState("status");
-	const { createUser, user, status, message } = useSignUp();
+	const { createUser } = useSignUp();
+
 	async function formSubmit(data) {
-		console.log(data);
 		if (!data.email || !data.password || !data.confirmPassword) {
 			setError("Todos los campos son obligatorios");
 			setErrorClass("status-error");

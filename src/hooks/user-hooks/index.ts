@@ -1,254 +1,247 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
+import { atom, useAtom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 
 const LOCAL_URL = "http://localhost:3000"; // Asegúrate de definir tu URL base
 
+//de esta forma no solo creamos el atomo local sino que tambien lo guarda en el localStorage
+//sin localStorage seria const userAtom = atom({token: "", email: "", name: "", location: ""});
+const userAtom = atomWithStorage("user", {
+	token: "",
+	email: "",
+	name: "",
+	location: "",
+});
+
 //creamos user
 const useSignUp = () => {
-  const [user, setUser] = useState({ email: "", token: "" });
-  const [status, setStatus] = useState(null);
-  const [message, setMessage] = useState("");
-  const createUser = async (email, password) => {
-    try {
-      const response = await fetch(LOCAL_URL + "/auth", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
-      const data = await response.json();
-      if (data.status === "success") {
-        setUser({ token: data.token, email: email });
-        localStorage.setItem("userToken", data.token);
-        localStorage.setItem("userEmail", email);
-      }
-      setStatus(data.status);
-      setMessage(data.message);
-      return { status: data.status, message: data.message };
-    } catch (error) {
-      console.error("Error en el hook useSignUp del userHooks", error);
-      return { status: "error" };
-    }
-  };
+	const [user, setUserSignUp] = useAtom(userAtom);
+	const createUser = async (email, password) => {
+		try {
+			const response = await fetch(LOCAL_URL + "/auth", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					email,
+					password,
+				}),
+			});
+			const data = await response.json();
+			if (data.status === "success") {
+				//seteamos los nuevos datos en el atom manteniendo los otros
+				setUserSignUp((prev) => ({
+					...prev,
+					token: data.token,
+					email: email,
+				}));
+			}
+			return { status: data.status, message: data.message };
+		} catch (error) {
+			console.error("Error en el hook useSignUp del userHooks", error);
+			return { status: "error" };
+		}
+	};
 
-  return { user, createUser, status, message };
+	return { createUser };
 };
 export { useSignUp };
 
 //seteamos nombre y localidad del user
 const useSetDataUser = () => {
-  const [status, setStatus] = useState(null);
-  const [message, setMessage] = useState("");
-  const token = localStorage.getItem("userToken");
-  if (!token) {
-    setStatus("error");
-    setMessage("No estás autenticado");
-    return { status: "error", message: "No estás autenticado" };
-  }
-  const [user, setUser] = useState(() => {
-    const name = localStorage.getItem("userName");
-    const location = localStorage.getItem("userLocation");
-    return {
-      name: name || "",
-      location: location || "",
-    };
-  });
-  const setDataUser = async (nombre, localidad) => {
-    try {
-      const response = await fetch(LOCAL_URL + "/me/my-data", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Acá va el token
-        },
-        body: JSON.stringify({
-          name: nombre,
-          location: localidad,
-        }),
-      });
-      const data = await response.json();
-      if (data.status === "success") {
-        setUser({ name: nombre, location: localidad });
-        localStorage.setItem("userName", nombre);
-        localStorage.setItem("userLocation", localidad);
-      }
-      setStatus(data.status);
-      setMessage(data.message);
-      return { status: data.status, message: data.message };
-    } catch (error) {
-      console.error("Error en el hook useSetDataUser del userHooks", error);
-      return { status: "error" };
-    }
-  };
-  return { user, setDataUser, status, message };
+	const [user, setUserData] = useAtom(userAtom);
+	const token = user.token;
+	if (!token) return { status: "error", message: "No estás autenticado" };
+
+	// const [user, setUser] = useState(() => {
+	// 	const name = localStorage.getItem("userName");
+	// 	const location = localStorage.getItem("userLocation");
+	// 	return {
+	// 		name: name || "",
+	// 		location: location || "",
+	// 	};
+	// });
+	const setDataUser = async (nombre, localidad) => {
+		try {
+			const response = await fetch(LOCAL_URL + "/me/my-data", {
+				method: "PATCH",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`, // Acá va el token
+				},
+				body: JSON.stringify({
+					name: nombre,
+					location: localidad,
+				}),
+			});
+			const data = await response.json();
+			if (data.status === "success") {
+				setUserData((prev) => ({
+					...prev,
+					name: nombre,
+					location: localidad,
+				}));
+			}
+			return { status: data.status, message: data.message };
+		} catch (error) {
+			console.error("Error en el hook useSetDataUser del userHooks", error);
+			return { status: "error" };
+		}
+	};
+	return { user, setDataUser };
 };
 export { useSetDataUser };
 
 //cambio de password del user
 const useSetNewPassword = () => {
-  const [status, setStatus] = useState(null);
-  const [message, setMessage] = useState("");
-  const token = localStorage.getItem("userToken");
-  const setNewPassword = async (password: string) => {
-    if (!token) {
-      setStatus("error");
-      setMessage("No estás autenticado");
-      return { status: "error", message: "No estás autenticado" };
-    }
-    try {
-      const response = await fetch(LOCAL_URL + "/me/my-pass", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Acá va el token
-        },
-        body: JSON.stringify({
-          password,
-        }),
-      });
-      const data = await response.json();
-      if (data.status === "success") {
-        localStorage.setItem("userToken", data.token);
-      }
-      setStatus(data.status);
-      setMessage(data.message);
-      return { status: data.status, message: data.message };
-    } catch (error) {
-      console.error("Error en el hook useSetNewPassword del userHooks", error);
-      return { status: "error" };
-    }
-  };
-  return { setNewPassword, status, message };
+	const [user, setUserPassword] = useAtom(userAtom);
+	const token = user.token;
+	const setNewPassword = async (password: string) => {
+		if (!token) return { status: "error", message: "No estás autenticado" };
+		try {
+			const response = await fetch(LOCAL_URL + "/me/my-pass", {
+				method: "PATCH",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`, // Acá va el token
+				},
+				body: JSON.stringify({
+					password,
+				}),
+			});
+			const data = await response.json();
+			if (data.status === "success") {
+				setUserPassword((prev) => ({
+					...prev,
+					token: data.token,
+				}));
+			}
+			return { status: data.status, message: data.message };
+		} catch (error) {
+			console.error("Error en el hook useSetNewPassword del userHooks", error);
+			return { status: "error" };
+		}
+	};
+	return { setNewPassword };
 };
 
 export { useSetNewPassword };
+
 //login
 const useLogIn = () => {
-  const navigate = useNavigate();
-  const [user, setUser] = useState(() => {
-    // Recuperar datos de localStorage al inicializar el estado
-    const token = localStorage.getItem("userToken");
-    const email = localStorage.getItem("userEmail");
-    const name = localStorage.getItem("userName");
-    const location = localStorage.getItem("userLocation");
-    return {
-      token: token || "",
-      email: email || "",
-      name: name || "",
-      location: location || "",
-    };
-  });
-  const [status, setStatus] = useState(null);
-  const [message, setMessage] = useState("");
+	const navigate = useNavigate();
+	// const [user, setUser] = useState(() => {
+	// 	// Recuperar datos de localStorage al inicializar el estado
+	// 	const token = localStorage.getItem("userToken");
+	// 	const email = localStorage.getItem("userEmail");
+	// 	const name = localStorage.getItem("userName");
+	// 	const location = localStorage.getItem("userLocation");
+	// 	return {
+	// 		token: token || "",
+	// 		email: email || "",
+	// 		name: name || "",
+	// 		location: location || "",
+	// 	};
+	// });
+	// const [status, setStatus] = useState(null);
+	// const [message, setMessage] = useState("");
+	const [user, setUser] = useAtom(userAtom);
+	const logIn = async (email, password) => {
+		try {
+			const response = await fetch(LOCAL_URL + "/auth/token", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					email,
+					password,
+				}),
+			});
+			const data = await response.json();
 
-  const logIn = async (email, password) => {
-    try {
-      const response = await fetch(LOCAL_URL + "/auth/token", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
-      const data = await response.json();
+			if (data.status === "success") {
+				setUser({
+					token: data.token,
+					email: email,
+					name: data.name || "",
+					location: data.localidad || "",
+				});
+			}
+			return { status: data.status, message: data.message };
+		} catch (error) {
+			console.error("Error en el hook useLogIn del userHooks", error);
+			return { status: "error" };
+		}
+	};
 
-      if (data.status === "success") {
-        setUser({
-          token: data.token,
-          email: email,
-          name: data.name || "",
-          location: data.localidad || "",
-        });
-        // Guardar en localStorage
-        localStorage.setItem("userToken", data.token);
-        localStorage.setItem("userEmail", email);
-        localStorage.setItem("userName", data.name || "");
-        localStorage.setItem("userLocation", data.localidad || "");
-      }
-      setStatus(data.status);
-      setMessage(data.message);
-      return { status: data.status, message: data.message };
-    } catch (error) {
-      console.error("Error en el hook useLogIn del userHooks", error);
-      setStatus("error");
-      return { status: "error" };
-    }
-  };
-
-  const logOut = () => {
-    setUser({ token: "", email: "", name: "", location: "" });
-    localStorage.removeItem("userToken");
-    localStorage.removeItem("userEmail");
-    localStorage.removeItem("userName");
-    localStorage.removeItem("userLocation");
-    navigate("/login");
-  };
-  return { user, logIn, logOut, status, message };
+	const logOut = () => {
+		setUser({ token: "", email: "", name: "", location: "" });
+		navigate("/");
+	};
+	return { user, logIn, logOut };
 };
 export { useLogIn };
 
 //restablecer contraseña - obtener codigo de verificacion
 const useGetCodePassword = () => {
-  const [status, setStatus] = useState(null);
-  const [message, setMessage] = useState("");
-  const getCode = async (email: string) => {
-    try {
-      const response = await fetch(LOCAL_URL + "/create-code", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
-      const data = await response.json();
-      localStorage.setItem("userEmail", email);
-
-      setStatus(data.status);
-      setMessage(data.message);
-      return { status: data.status, message: data.message };
-    } catch (error) {
-      console.error("error en el hook useGetCodePassword del userHooks", error);
-      return { status: "error" };
-    }
-  };
-  return { getCode, status, message };
+	const [user, setUserEmail] = useAtom(userAtom);
+	const getCode = async (email: string) => {
+		try {
+			const response = await fetch(LOCAL_URL + "/create-code", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ email }),
+			});
+			const data = await response.json();
+			if (data.status === "success") {
+				setUserEmail((prev) => ({
+					...prev,
+					email: email,
+				}));
+			}
+			return { status: data.status, message: data.message };
+		} catch (error) {
+			console.error("error en el hook useGetCodePassword del userHooks", error);
+			return { status: "error" };
+		}
+	};
+	return { getCode };
 };
 export { useGetCodePassword };
 
-//   //restablecer contraseña - enviar codigo de verificacion y cambiar la pass
+//restablecer contraseña - enviar codigo de verificacion y cambiar la pass
 const useSendCodePassword = () => {
-  const [status, setStatus] = useState(null);
-  const [message, setMessage] = useState("");
-  const email = localStorage.getItem("userEmail");
+	const [user, setUserToken] = useAtom(userAtom);
+	const email = user.email;
 
-  const sendCode = async (codigo: string) => {
-    try {
-      const respuesta = await fetch(LOCAL_URL + "/compare-code", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ codigo, email }),
-      });
-      const data = await respuesta.json();
-      if (data.status === "success") {
-        localStorage.setItem("userToken", data.token);
-      }
-      setStatus(data.status);
-      setMessage(data.message);
-      return { status: data.status, message: data.message };
-    } catch (error) {
-      console.error("error en hook useSendCodePassword del userHooks", error);
-      return { status: "error" };
-    }
-  };
-  return { sendCode, status, message };
+	const sendCode = async (codigo: string) => {
+		try {
+			const respuesta = await fetch(LOCAL_URL + "/compare-code", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ codigo, email }),
+			});
+			const data = await respuesta.json();
+			console.log(data);
+			if (data.status === "success") {
+				setUserToken((prev) => ({
+					...prev,
+					token: data.token,
+				}));
+			}
+			return { status: data.status, message: data.message };
+		} catch (error) {
+			console.error("error en hook useSendCodePassword del userHooks", error);
+			return { status: "error" };
+		}
+	};
+	return { sendCode };
 };
 export { useSendCodePassword };

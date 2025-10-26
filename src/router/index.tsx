@@ -12,6 +12,8 @@ import { EnterCode } from "../pages/reset-pass-enter-code";
 import { SearchPets } from "../pages/search-pets";
 import { PetsNearby } from "../pages/pets-nearby";
 import { MyPetsLost } from "../pages/my-pets-lost";
+import { CreateReport } from "../pages/create-report";
+import { EditReport } from "../pages/edit-report";
 
 function AppRoutes() {
 	return (
@@ -28,6 +30,8 @@ function AppRoutes() {
 				<Route path="search-pets" element={<SearchPets />} />
 				<Route path="pets-nearby" element={<PetsNearby />} />
 				<Route path="my-pets-lost" element={<MyPetsLost />} />
+				<Route path="create-report" element={<CreateReport />} />
+				<Route path="edit-report/:id" element={<EditReport />} />
 			</Route>
 		</Routes>
 	);

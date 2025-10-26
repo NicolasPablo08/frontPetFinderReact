@@ -8,14 +8,16 @@ function Menu(props: MenuProps) {
 	const [isOpen, setIsOpen] = useState(false); //estado para controlar la apertura y cierre del menu
 	const [isLogged, setIsLogged] = useState(false); //estado para mostrar el menu que corresponda segun el usuario este logueado o no
 	const [email, setEmail] = useState("");
-	const { logOut } = useLogIn();
+	const { user, logOut } = useLogIn();
 	useEffect(() => {
-		const token = localStorage.getItem("userToken");
-		if (token) {
-			setEmail(localStorage.getItem("userEmail") || "");
+		if (user.token) {
+			setEmail(user.email || "");
 			setIsLogged(true);
+		} else {
+			setEmail("");
+			setIsLogged(false);
 		}
-	}, []); // Solo se ejecuta una vez al montar el componente
+	}, [user]); // Solo se ejecuta una vez al montar el componente
 	function openMenu() {
 		setIsOpen(true);
 	}

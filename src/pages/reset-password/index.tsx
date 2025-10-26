@@ -8,16 +8,16 @@ import { useNavigate } from "react-router";
 import { Status } from "../../ui/status";
 import { useSetNewPassword } from "../../hooks/user-hooks";
 import { useLogIn } from "../../hooks/user-hooks";
-import { log } from "console";
+
 function ResetPassword() {
 	const navigate = useNavigate();
 	const { register, handleSubmit } = useForm();
 	const [error, setError] = useState("");
 	const [errorClass, setErrorClass] = useState("status");
-	const { setNewPassword, status, message } = useSetNewPassword();
+	const { setNewPassword } = useSetNewPassword();
 	const { logOut } = useLogIn();
+
 	async function formSubmit(data) {
-		console.log(data);
 		if (!data.password || !data.confirmPassword) {
 			setError("Todos los campos son obligatorios");
 			setErrorClass("status-error");

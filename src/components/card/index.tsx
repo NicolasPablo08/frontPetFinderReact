@@ -3,12 +3,14 @@ import * as css from "./index.css";
 import { Text } from "../../ui/text";
 import { Button } from "../../ui/button";
 import { ContactForm } from "../contact-form";
+import { useNavigate } from "react-router";
 type CardProps = {
 	petImgUrl: string;
 	petName: string;
 	petLocation: string;
 	ownerPetEmail?: string;
 	type: "edit" | "report";
+	petId?: any;
 	openForm?: () => void; //prop que viene de petsNearby para ejecutar la funcion y abrir el formulario
 };
 
@@ -16,10 +18,11 @@ function Card(props: CardProps) {
 	const { petImgUrl, petName, petLocation, type, ownerPetEmail } = props;
 	const btnStyle = type === "edit" ? "blue" : "red";
 	const btnText = type === "edit" ? "Editar 🖉" : "Reportar 🚨";
+	const navigate = useNavigate();
 
 	function editReport() {
-		//logica para editar reporte
-		console.log("editar reporte");
+		//leva a la pagina para editar el reporte con el id del pet
+		navigate("/edit-report/" + props.petId);
 	}
 	function formReportPet() {
 		//logica para abrir el formulario, el componente form se encarga de enviar la info
