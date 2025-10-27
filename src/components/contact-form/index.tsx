@@ -16,7 +16,7 @@ type ContactFormProps = {
 function ContactForm(props: ContactFormProps) {
 	const { ownerPetEmail, petName, closeForm } = props;
 	const { register, handleSubmit } = useForm();
-	const { sendPetForm, status, message } = useSendFormPetNearby();
+	const { sendPetForm } = useSendFormPetNearby();
 	const [classWaiting, setClassWaiting] = useState(false);
 	//status del mensaje
 	const [statusOpen, setStatusOpen] = useState(false);

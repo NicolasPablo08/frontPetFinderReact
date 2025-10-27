@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { atom, useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
@@ -7,7 +6,7 @@ const LOCAL_URL = "http://localhost:3000"; // Asegúrate de definir tu URL base
 
 //de esta forma no solo creamos el atomo local sino que tambien lo guarda en el localStorage
 //sin localStorage seria const userAtom = atom({token: "", email: "", name: "", location: ""});
-const userAtom = atomWithStorage("user", {
+export const userAtom = atomWithStorage("user", {
 	token: "",
 	email: "",
 	name: "",
@@ -54,15 +53,6 @@ const useSetDataUser = () => {
 	const [user, setUserData] = useAtom(userAtom);
 	const token = user.token;
 	if (!token) return { status: "error", message: "No estás autenticado" };
-
-	// const [user, setUser] = useState(() => {
-	// 	const name = localStorage.getItem("userName");
-	// 	const location = localStorage.getItem("userLocation");
-	// 	return {
-	// 		name: name || "",
-	// 		location: location || "",
-	// 	};
-	// });
 	const setDataUser = async (nombre, localidad) => {
 		try {
 			const response = await fetch(LOCAL_URL + "/me/my-data", {
@@ -132,21 +122,6 @@ export { useSetNewPassword };
 //login
 const useLogIn = () => {
 	const navigate = useNavigate();
-	// const [user, setUser] = useState(() => {
-	// 	// Recuperar datos de localStorage al inicializar el estado
-	// 	const token = localStorage.getItem("userToken");
-	// 	const email = localStorage.getItem("userEmail");
-	// 	const name = localStorage.getItem("userName");
-	// 	const location = localStorage.getItem("userLocation");
-	// 	return {
-	// 		token: token || "",
-	// 		email: email || "",
-	// 		name: name || "",
-	// 		location: location || "",
-	// 	};
-	// });
-	// const [status, setStatus] = useState(null);
-	// const [message, setMessage] = useState("");
 	const [user, setUser] = useAtom(userAtom);
 	const logIn = async (email, password) => {
 		try {

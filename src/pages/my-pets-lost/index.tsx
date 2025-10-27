@@ -12,22 +12,22 @@ import { Waiting } from "../../components/waiting";
 function MyPetsLost() {
 	const [classWaiting, setClassWaiting] = useState(false);
 	const [myPets, setMyPets] = useState([]);
-	const { user, logOut } = useLogIn();
+	const { user } = useLogIn();
 	const navigate = useNavigate();
-	const petsLost = JSON.parse(localStorage.getItem("myPetsLost")) || [];
-	const [selectedPet, setSelectedPet] = useState(null); //para pasar la mascota seleccionada al formulario
-	const { petsUser, getPetsUser, status, message } = useGetPetsUser();
-	//me envia a login si no estoy logueado
+	const { petsUser, getPetsUser } = useGetPetsUser();
+	useEffect(() => {
+		setMyPets(petsUser);
+	}, [petsUser]);
 	useEffect(() => {
 		const fetchPets = async () => {
 			if (!user.token) {
+				//me envia a login si no estoy logueado
 				navigate("/login");
 			} else {
 				setClassWaiting(true);
 				const result = await getPetsUser(user.token); // Llama a la función para obtener las mascotas
 				if (result) {
 					setClassWaiting(false);
-					setMyPets(result.pets);
 				}
 			}
 		};
@@ -53,10 +53,6 @@ function MyPetsLost() {
 										petImgUrl={pet.imgUrl}
 										petName={pet.name}
 										petLocation={pet.ubicacion}
-										//User.email: 'limam24101@skateru.com',Eso sugiere que la propiedad User.email está aplanada (flattened),
-										// es decir, no tenés un objeto User, sino una clave con punto en el nombre ("User.email").
-										// y se accede asi pet["User.email"]
-										ownerPetEmail={pet["User.email"]}
 										key={pet.petId}
 										petId={pet.petId}
 									/>

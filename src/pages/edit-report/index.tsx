@@ -7,7 +7,11 @@ import { TextField } from "../../ui/text-field";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
 import { Status } from "../../ui/status";
-import { useEditPetReport, useDeletePetReport } from "../../hooks/pets-hooks";
+import {
+	useEditPetReport,
+	useDeletePetReport,
+	useGetPetsUser,
+} from "../../hooks/pets-hooks";
 function EditReport() {
 	const { editReport } = useEditPetReport();
 	const { deletePetReport } = useDeletePetReport();
@@ -19,12 +23,12 @@ function EditReport() {
 	const inputFileRef = useRef(null);
 	const [image, setImage] = useState(null); // para montar solo la url en el src de la imagen
 	const [file, setFile] = useState(null); // para obtener la imagen y enviarla con el formulario, ya que es distinto el formato a la url de la imagen
-
+	const { petsUser } = useGetPetsUser();
 	const params = useParams();
 	const petToEditId = parseInt(params.id); //pasamos a number el id que viene de la url
 
-	const pets = JSON.parse(localStorage.getItem("petsUser")); //obtenemos los pets del localstorage
-	const petToEdit = pets.find((pet) => pet.petId === petToEditId);
+	//const pets = JSON.parse(localStorage.getItem("petsUser")); //obtenemos los pets del localstorage
+	const petToEdit = petsUser.find((pet) => pet.petId === petToEditId);
 	// useEffect para llenar el formulario al iniciar
 	useEffect(() => {
 		if (petToEdit) {

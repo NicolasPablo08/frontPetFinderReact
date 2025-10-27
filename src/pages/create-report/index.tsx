@@ -12,7 +12,7 @@ import { useCreatePetReport } from "../../hooks/pets-hooks";
 function CreateReport() {
 	const { register, handleSubmit } = useForm();
 	const navigate = useNavigate();
-	const { createReport, status, message } = useCreatePetReport();
+	const { createReport } = useCreatePetReport();
 	const [error, setError] = useState("");
 	const [errorClass, setErrorClass] = useState("status");
 	const [lastCoords, setLastCoords] = useState({

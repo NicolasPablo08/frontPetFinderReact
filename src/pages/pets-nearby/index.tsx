@@ -6,12 +6,13 @@ import { useNavigate } from "react-router";
 import { Card } from "../../components/card";
 import { EmptyResults } from "../../ui/empty-results";
 import { ContactForm } from "../../components/contact-form";
+import { useSearchPets } from "../../hooks/pets-hooks";
 
 function PetsNearby() {
 	const [formEditIsOpen, setFormEditIsOpen] = useState(false); //para abrir el formulario
 	const navigate = useNavigate();
-	const petsNearby = JSON.parse(localStorage.getItem("searchPetsNearby")) || [];
 	const [selectedPet, setSelectedPet] = useState(null); //para pasar la mascota seleccionada al formulario
+	const { petsFromSearch } = useSearchPets();
 
 	function openForm(pet?) {
 		setFormEditIsOpen(true);
@@ -27,7 +28,7 @@ function PetsNearby() {
 					formEditIsOpen ? css["form-open"] : ""
 				}`}
 			>
-				{petsNearby.length === 0 ? (
+				{petsFromSearch.length === 0 ? (
 					<EmptyResults>
 						No se encontraron mascotas cerca, intenta con otra ubicacion o
 						ampliando el rango de busqueda
@@ -36,18 +37,15 @@ function PetsNearby() {
 					<>
 						<Text variant="title"> Mascotas perdidas </Text>
 						<div className={css["card-container"]}>
-							{petsNearby.map((pet) => (
+							{petsFromSearch.map((pet) => (
 								<Card
 									type="report"
-									petImgUrl={pet.imageUrl}
+									petImgUrl={pet.imgUrl}
 									petName={pet.name}
-									petLocation="cipolletti"
-									//User.email: 'limam24101@skateru.com',Eso sugiere que la propiedad User.email está aplanada (flattened),
-									// es decir, no tenés un objeto User, sino una clave con punto en el nombre ("User.email").
-									// y se accede asi pet["User.email"]
-									ownerPetEmail={pet["User.email"]}
+									petLocation={pet.ubicacion}
+									ownerPetEmail={pet.ownerPetEmail}
 									openForm={() => openForm(pet)}
-									key={pet.id}
+									key={pet.petId}
 								/>
 							))}
 						</div>
@@ -66,7 +64,7 @@ function PetsNearby() {
 			<div>
 				{formEditIsOpen && (
 					<ContactForm
-						ownerPetEmail={selectedPet["User.email"]}
+						ownerPetEmail={selectedPet.ownerPetEmail}
 						petName={selectedPet.name}
 						closeForm={closeForm}
 					/>

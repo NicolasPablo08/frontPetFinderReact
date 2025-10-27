@@ -63,7 +63,7 @@ function Menu(props: MenuProps) {
 								{" "}
 								Home
 							</Text>
-							<Text href="/share-loc" variant="linkMenu">
+							<Text href="/search-pets" variant="linkMenu">
 								{" "}
 								Ver mascotas <br /> perdidas cerca
 							</Text>
