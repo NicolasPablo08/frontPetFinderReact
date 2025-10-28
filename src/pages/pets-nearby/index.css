@@ -8,6 +8,7 @@
 	flex-direction: column;
 	justify-content: space-between;
 	text-align: center;
+	align-items: center;
 	position: relative;
 }
 .card-container {
@@ -26,4 +27,11 @@
 		5px
 	); /* Aplica un desenfoque al fondo  cuando esta presente el form*/
 	pointer-events: none; /* desactiva los clicks del mouse cuando esta presente el form*/
+}
+.form-container {
+	position: fixed;
+	z-index: 2;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }

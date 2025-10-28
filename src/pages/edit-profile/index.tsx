@@ -10,7 +10,7 @@ import { Status } from "../../ui/status";
 function EditProfile() {
 	const navigate = useNavigate();
 	const [error, setError] = useState("");
-	const [errorClass, setErrorClass] = useState("status");
+	const [statusOpen, setStatusOpen] = useState(false);
 	const { user, setDataUser } = useSetDataUser();
 	const { register, handleSubmit } = useForm({
 		defaultValues: {
@@ -19,28 +19,27 @@ function EditProfile() {
 		},
 	});
 	async function formSubmit(data) {
-		console.log(data);
 		if (!data.nombre || !data.localidad) {
 			setError("Por favor completa todos los campos");
-			setErrorClass("status-error");
+			setStatusOpen(true);
 			setTimeout(() => {
-				setErrorClass("status");
+				setStatusOpen(false);
 			}, 3000);
 			return;
 		}
 		const result = await setDataUser(data.nombre, data.localidad);
 		if (result.status === "success") {
 			setError(result.message);
-			setErrorClass("status-error");
+			setStatusOpen(true);
 			setTimeout(() => {
-				setErrorClass("status");
+				setStatusOpen(false);
 				navigate("/profile");
 			}, 3000);
 		} else {
 			setError(result.message);
-			setErrorClass("status-error");
+			setStatusOpen(true);
 			setTimeout(() => {
-				setErrorClass("status");
+				setStatusOpen(false);
 			}, 3000);
 		}
 	}
@@ -64,7 +63,7 @@ function EditProfile() {
 					</Button>
 				</form>
 			</div>
-			<Status className={css[errorClass]}>{error}</Status>
+			{statusOpen && <Status>{error}</Status>}
 		</div>
 	);
 }

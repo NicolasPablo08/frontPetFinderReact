@@ -21,9 +21,3 @@
 	flex-direction: column;
 	gap: 70px;
 }
-.status {
-	display: none;
-}
-.status-error {
-	display: flex;
-}

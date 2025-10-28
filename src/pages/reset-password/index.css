@@ -18,9 +18,3 @@
 .button {
 	margin-top: 15px;
 }
-.status {
-	display: none;
-}
-.status-error {
-	display: flex;
-}

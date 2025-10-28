@@ -10,6 +10,7 @@ import { Waiting } from "../waiting";
 type ContactFormProps = {
 	ownerPetEmail: string;
 	petName: string;
+	className: string;
 	closeForm: () => void; // Recibir la función para cerrar el formulario desde la page
 };
 
@@ -17,7 +18,7 @@ function ContactForm(props: ContactFormProps) {
 	const { ownerPetEmail, petName, closeForm } = props;
 	const { register, handleSubmit } = useForm();
 	const { sendPetForm } = useSendFormPetNearby();
-	const [classWaiting, setClassWaiting] = useState(false);
+	const [waitingOpen, setWaitingOpen] = useState(false);
 	//status del mensaje
 	const [statusOpen, setStatusOpen] = useState(false);
 	const [statusMessage, setStatusMessage] = useState("");
@@ -35,7 +36,7 @@ function ContactForm(props: ContactFormProps) {
 		}
 		// Si todo está bien,
 		// logica para enviar el mensaje
-		setClassWaiting(true);
+		setWaitingOpen(true);
 		const result = await sendPetForm(
 			data.nombre,
 			ownerPetEmail,
@@ -46,7 +47,7 @@ function ContactForm(props: ContactFormProps) {
 		const { message } = result;
 
 		setStatusMessage(message);
-		setClassWaiting(false);
+		setWaitingOpen(false);
 		setStatusOpen(true);
 
 		// Cerrar el mensaje después de 3 segundos
@@ -58,7 +59,11 @@ function ContactForm(props: ContactFormProps) {
 	}
 	return (
 		<div>
-			<div className={`${css.root} `}>
+			<div
+				className={`${css.root} ${props.className || ""} ${
+					waitingOpen && css.waiting
+				}`}
+			>
 				<button className={css["close-button"]} onClick={closeForm}>
 					X
 				</button>
@@ -90,8 +95,8 @@ function ContactForm(props: ContactFormProps) {
 					</Button>
 				</form>
 			</div>
-			{statusOpen && <Status className={css.status}>{statusMessage}</Status>}
-			{classWaiting && <Waiting />}
+			{statusOpen && <Status>{statusMessage}</Status>}
+			{waitingOpen && <Waiting />}
 		</div>
 	);
 }

@@ -142,134 +142,133 @@ function MapSearch(props: MapSearchProps) {
 
 export { MapSearch };
 
-//1. useObtainCoords: buscar coordenadas por nombre
-// Hook que recibe un término de búsqueda y devuelve las coordenadas encontradas
-export function useObtainCoords(query: string): {
-	coords: { lat: number; lng: number } | null;
-	loading: boolean;
-	error: string | null;
-} {
-	const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(
-		null
-	);
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
+// //1. useObtainCoords: buscar coordenadas por nombre
+// // Hook que recibe un término de búsqueda y devuelve las coordenadas encontradas
+// export function useObtainCoords(query: string): {
+// 	coords: { lat: number; lng: number } | null;
+// 	loading: boolean;
+// 	error: string | null;
+// } {
+// 	const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(
+// 		null
+// 	);
+// 	const [loading, setLoading] = useState(false);
+// 	const [error, setError] = useState<string | null>(null);
 
-	useEffect(() => {
-		if (!query) return;
+// 	useEffect(() => {
+// 		if (!query) return;
 
-		let isCancelled = false;
-		setLoading(true);
-		setError(null);
+// 		let isCancelled = false;
+// 		setLoading(true);
+// 		setError(null);
 
-		fetch(
-			`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-				query
-			)}&countrycodes=ar`
-		)
-			.then((res) => res.json())
-			.then((data) => {
-				if (isCancelled) return;
-				if (data.length > 0) {
-					const { lat, lon } = data[0];
-					setCoords({ lat: parseFloat(lat), lng: parseFloat(lon) });
-				} else {
-					setError("No se encontraron resultados");
-				}
-			})
-			.catch(() => {
-				if (!isCancelled) setError("Error al buscar coordenadas");
-			})
-			.finally(() => {
-				if (!isCancelled) setLoading(false);
-			});
+// 		fetch(
+// 			`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+// 				query
+// 			)}&countrycodes=ar`
+// 		)
+// 			.then((res) => res.json())
+// 			.then((data) => {
+// 				if (isCancelled) return;
+// 				if (data.length > 0) {
+// 					const { lat, lon } = data[0];
+// 					setCoords({ lat: parseFloat(lat), lng: parseFloat(lon) });
+// 				} else {
+// 					setError("No se encontraron resultados");
+// 				}
+// 			})
+// 			.catch(() => {
+// 				if (!isCancelled) setError("Error al buscar coordenadas");
+// 			})
+// 			.finally(() => {
+// 				if (!isCancelled) setLoading(false);
+// 			});
 
-		return () => {
-			isCancelled = true;
-		};
-	}, [query]);
+// 		return () => {
+// 			isCancelled = true;
+// 		};
+// 	}, [query]);
 
-	return { coords, loading, error };
-}
-// //Cómo usarlo dentro del componente de mapa:
-// const [searchTerm, setSearchTerm] = useState("");
-// const { coords: foundCoords, loading, error } = useObtainCoords(searchTerm);
+// 	return { coords, loading, error };
+// }
+// // //Cómo usarlo dentro del componente de mapa:
+// // const [searchTerm, setSearchTerm] = useState("");
+// // const { coords: foundCoords, loading, error } = useObtainCoords(searchTerm);
 
-// useEffect(() => {
-// 	if (foundCoords && mapRef.current) {
-// 		// Centrar mapa y actualizar coordenadas
-// 		const { lat, lng } = foundCoords;
-// 		setCoords({ lat, lng }); // React state
-// 		mapRef.current.getView().setCenter(fromLonLat([lng, lat]));
-// 	}
-// }, [foundCoords]);
+// // useEffect(() => {
+// // 	if (foundCoords && mapRef.current) {
+// // 		// Centrar mapa y actualizar coordenadas
+// // 		const { lat, lng } = foundCoords;
+// // 		setCoords({ lat, lng }); // React state
+// // 		mapRef.current.getView().setCenter(fromLonLat([lng, lat]));
+// // 	}
+// // }, [foundCoords]);
 
-//2. useReverseGeocode: obtener ciudad y provincia
+// //2. useReverseGeocode: obtener ciudad y provincia
+// export function useReverseGeocode(
+// 	lat: number,
+// 	lng: number
+// ): {
+// 	locationName: string;
+// 	loading: boolean;
+// 	error: string | null;
+// } {
+// 	const [locationName, setLocationName] = useState("Cargando...");
+// 	const [loading, setLoading] = useState(false);
+// 	const [error, setError] = useState<string | null>(null);
 
-export function useReverseGeocode(
-	lat: number,
-	lng: number
-): {
-	locationName: string;
-	loading: boolean;
-	error: string | null;
-} {
-	const [locationName, setLocationName] = useState("Cargando...");
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
+// 	useEffect(() => {
+// 		if (lat == null || lng == null) return;
 
-	useEffect(() => {
-		if (lat == null || lng == null) return;
+// 		let isCancelled = false;
+// 		setLoading(true);
+// 		setError(null);
 
-		let isCancelled = false;
-		setLoading(true);
-		setError(null);
+// 		fetch(
+// 			`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=10&addressdetails=1`,
+// 			{ headers: { "User-Agent": "mi-app/1.0" } }
+// 		)
+// 			.then((res) => res.json())
+// 			.then((data) => {
+// 				if (isCancelled) return;
+// 				if (data.address) {
+// 					const { city, town, village, state } = data.address;
+// 					const ciudad = city || town || village || "Desconocida";
+// 					const provincia = state || "Desconocida";
+// 					setLocationName(`${ciudad}, ${provincia}`);
+// 				} else {
+// 					setLocationName("Ubicación desconocida");
+// 				}
+// 			})
+// 			.catch(() => {
+// 				if (!isCancelled) {
+// 					setError("Error al obtener localidad");
+// 					setLocationName("Ubicación desconocida");
+// 				}
+// 			})
+// 			.finally(() => {
+// 				if (!isCancelled) setLoading(false);
+// 			});
 
-		fetch(
-			`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=10&addressdetails=1`,
-			{ headers: { "User-Agent": "mi-app/1.0" } }
-		)
-			.then((res) => res.json())
-			.then((data) => {
-				if (isCancelled) return;
-				if (data.address) {
-					const { city, town, village, state } = data.address;
-					const ciudad = city || town || village || "Desconocida";
-					const provincia = state || "Desconocida";
-					setLocationName(`${ciudad}, ${provincia}`);
-				} else {
-					setLocationName("Ubicación desconocida");
-				}
-			})
-			.catch(() => {
-				if (!isCancelled) {
-					setError("Error al obtener localidad");
-					setLocationName("Ubicación desconocida");
-				}
-			})
-			.finally(() => {
-				if (!isCancelled) setLoading(false);
-			});
+// 		return () => {
+// 			isCancelled = true;
+// 		};
+// 	}, [lat, lng]);
 
-		return () => {
-			isCancelled = true;
-		};
-	}, [lat, lng]);
+// 	return { locationName, loading, error };
+// }
 
-	return { locationName, loading, error };
-}
+// //Cómo integrarlo en el componente:
+// // const { locationName, loading: ciudadLoading } = useReverseGeocode(
+// //   coords.lat,
+// //   coords.lng
+// // );
 
-//Cómo integrarlo en el componente:
-// const { locationName, loading: ciudadLoading } = useReverseGeocode(
-//   coords.lat,
-//   coords.lng
-// );
-
-// return (
-//   <>
-//     {/* ...mapa y marcador */}
-//     <p>
-//       {ciudadLoading ? "Cargando ciudad..." : locationName}
-//     </p>
-//   </>
-// );
+// // return (
+// //   <>
+// //     {/* ...mapa y marcador */}
+// //     <p>
+// //       {ciudadLoading ? "Cargando ciudad..." : locationName}
+// //     </p>
+// //   </>
+// // );

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import * as css from "./index.css";
 import { Text } from "../../ui/text";
 import { MapSearch } from "../../components/map-search";
@@ -8,13 +8,16 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { Status } from "../../ui/status";
 import { useCreatePetReport } from "../../hooks/pets-hooks";
+import { Waiting } from "../../components/waiting";
 
 function CreateReport() {
 	const { register, handleSubmit } = useForm();
 	const navigate = useNavigate();
 	const { createReport } = useCreatePetReport();
 	const [error, setError] = useState("");
-	const [errorClass, setErrorClass] = useState("status");
+	const [statusOpen, setStatusOpen] = useState(false);
+	const [waitingOpen, setWaitingOpen] = useState(false);
+
 	const [lastCoords, setLastCoords] = useState({
 		lat: -34.6037,
 		lng: -58.3816,
@@ -53,12 +56,13 @@ function CreateReport() {
 	async function formSubmit(data) {
 		if (!lastCoords.lat || !lastCoords.lng || !data.name || !file) {
 			setError("Todos los campos son obligatorios");
-			setErrorClass("status-error");
+			setStatusOpen(true);
 			setTimeout(() => {
-				setErrorClass("status");
+				setStatusOpen(false);
 			}, 3000);
 			return;
 		}
+		setWaitingOpen(true);
 		const result = await createReport(
 			data.name,
 			file,
@@ -66,22 +70,24 @@ function CreateReport() {
 			lastCoords.lng
 		);
 		if (result.status === "success") {
-			setErrorClass("status-error");
+			setWaitingOpen(false);
+			setStatusOpen(true);
 			setError(result.message);
 			setTimeout(() => {
 				navigate("/my-pets-lost");
 			}, 3000);
 		} else {
-			setErrorClass("status-error");
+			setWaitingOpen(false);
+			setStatusOpen(true);
 			setError(result.message);
 			setTimeout(() => {
-				setErrorClass("status");
+				setStatusOpen(false);
 			}, 3000);
 		}
 	}
 	return (
 		<div>
-			<div className={css.root}>
+			<div className={`${css.root} ${waitingOpen && css.waiting}`}>
 				<div className={css["text-container"]}>
 					<Text variant="title"> Reportar mascota perdida</Text>
 					<Text variant="subtitle">
@@ -132,7 +138,8 @@ function CreateReport() {
 					</Button>
 				</div>
 			</div>
-			<Status className={css[errorClass]}>{error}</Status>
+			{statusOpen && <Status>{error}</Status>}
+			{waitingOpen && <Waiting />}
 		</div>
 	);
 }

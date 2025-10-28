@@ -8,6 +8,10 @@
 	flex-direction: column;
 	justify-content: space-between;
 }
+.waiting {
+	filter: blur(5px); /* blureamos el root*/
+	pointer-events: none; /* desactivamos los clicks del mouse*/
+}
 .text-container {
 	text-align: center;
 	display: flex;
@@ -25,10 +29,4 @@
 	flex-direction: row;
 	justify-content: center;
 	gap: 5px;
-}
-.status {
-	display: none;
-}
-.status-error {
-	display: flex;
 }

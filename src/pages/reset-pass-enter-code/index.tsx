@@ -11,7 +11,7 @@ function EnterCode() {
 	const navigate = useNavigate();
 	const { register, handleSubmit } = useForm();
 	const [error, setError] = useState("");
-	const [errorClass, setErrorClass] = useState("status");
+	const [statusOpen, setStatusOpen] = useState(false);
 	const { sendCode } = useSendCodePassword();
 
 	//contador de tiempo
@@ -29,9 +29,9 @@ function EnterCode() {
 	useEffect(() => {
 		if (timeLeft === 0) {
 			setError("El tiempo se agotó, solicita un nuevo código.");
-			setErrorClass("status-error");
+			setStatusOpen(true);
 			const timeout = setTimeout(() => {
-				setErrorClass("status");
+				setStatusOpen(false);
 				navigate("/enter-email");
 			}, 3000);
 			return () => clearTimeout(timeout);
@@ -45,9 +45,9 @@ function EnterCode() {
 			navigate("/reset-password");
 		} else {
 			setError(result.message);
-			setErrorClass("status-error");
+			setStatusOpen(true);
 			setTimeout(() => {
-				setErrorClass("status");
+				setStatusOpen(false);
 			}, 3000);
 		}
 	}
@@ -82,7 +82,7 @@ function EnterCode() {
 					Volver a enviar el código
 				</Button>
 			</div>
-			<Status className={css[errorClass]}>{error}</Status>
+			{statusOpen && <Status>{error}</Status>}
 		</div>
 	);
 }

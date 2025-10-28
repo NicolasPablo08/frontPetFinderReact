@@ -33,9 +33,3 @@
 	flex-direction: row;
 	gap: 5px;
 }
-.status {
-	display: none;
-}
-.status-error {
-	display: flex;
-}

@@ -13,41 +13,41 @@ function ResetPassword() {
 	const navigate = useNavigate();
 	const { register, handleSubmit } = useForm();
 	const [error, setError] = useState("");
-	const [errorClass, setErrorClass] = useState("status");
+	const [statusOpen, setStatusOpen] = useState(false);
 	const { setNewPassword } = useSetNewPassword();
 	const { logOut } = useLogIn();
 
 	async function formSubmit(data) {
 		if (!data.password || !data.confirmPassword) {
 			setError("Todos los campos son obligatorios");
-			setErrorClass("status-error");
+			setStatusOpen(true);
 			setTimeout(() => {
-				setErrorClass("status");
+				setStatusOpen(false);
 			}, 3000);
 			return;
 		}
 		if (data.password !== data.confirmPassword) {
 			setError("Las contraseñas deben ser iguales");
-			setErrorClass("status-error");
+			setStatusOpen(true);
 			setTimeout(() => {
-				setErrorClass("status");
+				setStatusOpen(false);
 			}, 3000);
 			return;
 		}
 		const result = await setNewPassword(data.password);
 		if (result.status === "success") {
 			setError(result.message);
-			setErrorClass("status-error");
+			setStatusOpen(true);
 			setTimeout(() => {
-				setErrorClass("status");
+				setStatusOpen(false);
 				logOut();
 				navigate("/login");
 			}, 3000);
 		} else {
 			setError(result.message);
-			setErrorClass("status-error");
+			setStatusOpen(true);
 			setTimeout(() => {
-				setErrorClass("status");
+				setStatusOpen(false);
 			}, 3000);
 		}
 	}
@@ -79,7 +79,7 @@ function ResetPassword() {
 					</Button>
 				</form>
 			</div>
-			<Status className={css[errorClass]}>{error}</Status>
+			{statusOpen && <Status>{error}</Status>}
 		</div>
 	);
 }

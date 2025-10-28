@@ -10,7 +10,7 @@ import { useGetPetsUser } from "../../hooks/pets-hooks";
 import { Waiting } from "../../components/waiting";
 
 function MyPetsLost() {
-	const [classWaiting, setClassWaiting] = useState(false);
+	const [waitingOpen, setWaitingOpen] = useState(false);
 	const [myPets, setMyPets] = useState([]);
 	const { user } = useLogIn();
 	const navigate = useNavigate();
@@ -24,10 +24,10 @@ function MyPetsLost() {
 				//me envia a login si no estoy logueado
 				navigate("/login");
 			} else {
-				setClassWaiting(true);
+				setWaitingOpen(true);
 				const result = await getPetsUser(user.token); // Llama a la función para obtener las mascotas
 				if (result) {
-					setClassWaiting(false);
+					setWaitingOpen(false);
 				}
 			}
 		};
@@ -35,7 +35,7 @@ function MyPetsLost() {
 	}, [user.token, navigate]);
 	return (
 		<div>
-			{classWaiting ? (
+			{waitingOpen ? (
 				<Waiting />
 			) : (
 				<div className={css.root}>

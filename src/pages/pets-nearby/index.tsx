@@ -67,6 +67,7 @@ function PetsNearby() {
 						ownerPetEmail={selectedPet.ownerPetEmail}
 						petName={selectedPet.name}
 						closeForm={closeForm}
+						className={css["form-container"]}
 					/>
 				)}
 			</div>

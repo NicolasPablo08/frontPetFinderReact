@@ -12,13 +12,16 @@ import {
 	useDeletePetReport,
 	useGetPetsUser,
 } from "../../hooks/pets-hooks";
+import { Waiting } from "../../components/waiting";
+import { set } from "ol/transform";
 function EditReport() {
 	const { editReport } = useEditPetReport();
 	const { deletePetReport } = useDeletePetReport();
 	const { register, handleSubmit, reset } = useForm();
 	const navigate = useNavigate();
 	const [error, setError] = useState("");
-	const [errorClass, setErrorClass] = useState("status");
+	const [statusOpen, setStatusOpen] = useState(false);
+	const [waitingOpen, setWaitingOpen] = useState(false);
 	const [lastCoords, setLastCoords] = useState(null);
 	const inputFileRef = useRef(null);
 	const [image, setImage] = useState(null); // para montar solo la url en el src de la imagen
@@ -70,12 +73,14 @@ function EditReport() {
 	async function formSubmit(data) {
 		if (!lastCoords.lat || !lastCoords.lng || !data.name || !(file || image)) {
 			setError("Todos los campos son obligatorios");
-			setErrorClass("status-error");
+			setStatusOpen(true);
 			setTimeout(() => {
-				setErrorClass("status");
+				setStatusOpen(false);
 			}, 3000);
 			return;
 		}
+		setWaitingOpen(true);
+
 		const result = await editReport(
 			data.name,
 			file || image,
@@ -84,38 +89,43 @@ function EditReport() {
 			petToEditId
 		);
 		if (result.status === "success") {
-			setErrorClass("status-error");
+			setWaitingOpen(false);
+			setStatusOpen(true);
 			setError(result.message);
 			setTimeout(() => {
 				navigate("/my-pets-lost");
 			}, 3000);
 		} else {
-			setErrorClass("status-error");
+			setWaitingOpen(false);
+			setStatusOpen(true);
 			setError(result.message);
 			setTimeout(() => {
-				setErrorClass("status");
+				setStatusOpen(false);
 			}, 3000);
 		}
 	}
 	async function deleteReport() {
+		setWaitingOpen(true);
 		const result = await deletePetReport(petToEditId);
 		if (result.status === "success") {
-			setErrorClass("status-error");
+			setWaitingOpen(false);
+			setStatusOpen(true);
 			setError(result.message);
 			setTimeout(() => {
 				navigate("/my-pets-lost");
 			}, 3000);
 		} else {
-			setErrorClass("status-error");
+			setWaitingOpen(false);
+			setStatusOpen(true);
 			setError(result.message);
 			setTimeout(() => {
-				setErrorClass("status");
+				setStatusOpen(false);
 			}, 3000);
 		}
 	}
 	return (
 		<div>
-			<div className={css.root}>
+			<div className={`${css.root} ${waitingOpen && css.waiting}`}>
 				<div className={css["text-container"]}>
 					<Text variant="title"> Editar reporte de mascota</Text>
 					<Text variant="subtitle">
@@ -168,7 +178,8 @@ function EditReport() {
 					</Button>
 				</div>
 			</div>
-			<Status className={css[errorClass]}>{error}</Status>
+			{statusOpen && <Status>{error}</Status>}
+			{waitingOpen && <Waiting />}
 		</div>
 	);
 }

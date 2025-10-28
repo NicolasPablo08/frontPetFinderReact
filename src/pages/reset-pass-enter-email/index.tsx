@@ -7,28 +7,34 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { Status } from "../../ui/status";
 import { useGetCodePassword } from "../../hooks/user-hooks";
+import { Waiting } from "../../components/waiting";
+import { set } from "ol/transform";
 function EnterEmail() {
 	const navigate = useNavigate();
 	const { register, handleSubmit } = useForm();
 	const [error, setError] = useState("");
-	const [errorClass, setErrorClass] = useState("status");
+	const [statusOpen, setStatusOpen] = useState(false);
+	const [waitingOpen, setWaitingOpen] = useState(false);
+
 	const { getCode } = useGetCodePassword();
 
 	async function formSubmit(data) {
+		setWaitingOpen(true);
 		const result = await getCode(data.email);
 		if (result.status === "success") {
 			navigate("/enter-code");
 		} else {
+			setWaitingOpen(false);
 			setError(result.message);
-			setErrorClass("status-error");
+			setStatusOpen(true);
 			setTimeout(() => {
-				setErrorClass("status");
+				setStatusOpen(false);
 			}, 3000);
 		}
 	}
 	return (
 		<div>
-			<div className={css.root}>
+			<div className={`${css.root} ${waitingOpen && css.waiting}`}>
 				<div className={css["text-container"]}>
 					<Text variant="title">Restablecer contraseña</Text>
 					<Text variant="subtitle">
@@ -48,7 +54,8 @@ function EnterEmail() {
 					Volver
 				</Button>
 			</div>
-			<Status className={css[errorClass]}>{error}</Status>
+			{statusOpen && <Status>{error}</Status>}
+			{waitingOpen && <Waiting />}
 		</div>
 	);
 }

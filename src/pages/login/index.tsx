@@ -11,7 +11,7 @@ import { Status } from "../../ui/status";
 function Login() {
 	const navigate = useNavigate();
 	const [error, setError] = useState("");
-	const [errorClass, setErrorClass] = useState("status");
+	const [statusOpen, setStatusOpen] = useState(false);
 
 	const { logIn } = useLogIn();
 
@@ -22,9 +22,9 @@ function Login() {
 	async function formSubmit(data) {
 		if (!data.email || !data.password) {
 			setError("Todos los campos son obligatorios");
-			setErrorClass("status-error");
+			setStatusOpen(true);
 			setTimeout(() => {
-				setErrorClass("status");
+				setStatusOpen(false);
 			}, 3000);
 			return;
 		}
@@ -33,10 +33,10 @@ function Login() {
 		if (result.status === "success") {
 			navigate("/profile");
 		} else {
-			setErrorClass("status-error");
+			setStatusOpen(true);
 			setError(result.message);
 			setTimeout(() => {
-				setErrorClass("status");
+				setStatusOpen(false);
 			}, 3000);
 		}
 	}
@@ -76,7 +76,7 @@ function Login() {
 					Acceder
 				</Button>
 			</div>
-			<Status className={css[errorClass]}>{error}</Status>
+			{statusOpen && <Status>{error}</Status>}
 		</div>
 	);
 }

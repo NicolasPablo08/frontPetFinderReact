@@ -7,39 +7,48 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { useSignUp } from "../../hooks/user-hooks";
 import { Status } from "../../ui/status";
-
+import { Waiting } from "../../components/waiting";
 function Regist() {
 	const navigate = useNavigate();
 	const { register, handleSubmit } = useForm();
 	const [error, setError] = useState("");
-	const [errorClass, setErrorClass] = useState("status");
+	const [statusOpen, setStatusOpen] = useState(false);
+	const [waitingOpen, setWaitingOpen] = useState(false);
 	const { createUser } = useSignUp();
 
 	async function formSubmit(data) {
 		if (!data.email || !data.password || !data.confirmPassword) {
 			setError("Todos los campos son obligatorios");
-			setErrorClass("status-error");
+			setStatusOpen(true);
 			setTimeout(() => {
-				setErrorClass("status");
+				setStatusOpen(false);
 			}, 3000);
 			return;
 		}
 		if (data.password !== data.confirmPassword) {
 			setError("Las contraseñas deben ser iguales");
-			setErrorClass("status-error");
+			setStatusOpen(true);
 			setTimeout(() => {
-				setErrorClass("status");
+				setStatusOpen(false);
 			}, 3000);
 			return;
 		}
+		setWaitingOpen(true);
 		const result = await createUser(data.email, data.password);
 		if (result.status === "success") {
-			navigate("/edit-profile");
-		} else {
+			setWaitingOpen(false);
 			setError(result.message);
-			setErrorClass("status-error");
+			setStatusOpen(true);
 			setTimeout(() => {
-				setErrorClass("status");
+				setStatusOpen(false);
+				navigate("/edit-profile");
+			}, 3000);
+		} else {
+			setWaitingOpen(false);
+			setError(result.message);
+			setStatusOpen(true);
+			setTimeout(() => {
+				setStatusOpen(false);
 			}, 3000);
 		}
 	}
@@ -77,7 +86,8 @@ function Regist() {
 					Siguiente
 				</Button>
 			</div>
-			<Status className={css[errorClass]}>{error}</Status>
+			{statusOpen && <Status>{error}</Status>}
+			{waitingOpen && <Waiting />}
 		</div>
 	);
 }
