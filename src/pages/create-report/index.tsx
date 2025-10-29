@@ -9,6 +9,7 @@ import { useNavigate } from "react-router";
 import { Status } from "../../ui/status";
 import { useCreatePetReport } from "../../hooks/pets-hooks";
 import { Waiting } from "../../components/waiting";
+import { useCheckUserLogin } from "../../hooks/user-hooks";
 
 function CreateReport() {
 	const { register, handleSubmit } = useForm();
@@ -22,6 +23,17 @@ function CreateReport() {
 		lat: -34.6037,
 		lng: -58.3816,
 	});
+
+	//hook para saber si estoy logueado
+	const isLoggedIn = useCheckUserLogin();
+
+	//me envia a login si no estoy logueado
+	useEffect(() => {
+		if (!isLoggedIn) {
+			navigate("/login");
+		}
+	}, [isLoggedIn, navigate]);
+
 	const inputFileRef = useRef(null);
 	const [image, setImage] = useState("public/assets/icon-img.png"); // para montar solo la url en el src de la imagen
 	const [file, setFile] = useState(null); // para obtener la imagen y enviarla con el formulario, ya que es distinto el formato a la url de la imagen

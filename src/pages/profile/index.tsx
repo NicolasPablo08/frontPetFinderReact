@@ -4,18 +4,21 @@ import { Text } from "../../ui/text";
 import * as css from "./index.css";
 import { useNavigate } from "react-router";
 import { useLogIn } from "../../hooks/user-hooks";
+import { useCheckUserLogin } from "../../hooks/user-hooks";
 
 function Profile() {
 	const { user, logOut } = useLogIn();
 	const navigate = useNavigate();
 	const email = user.email;
+	//hook para saber si estoy logueado
+	const isLoggedIn = useCheckUserLogin();
 
 	//me envia a login si no estoy logueado
 	useEffect(() => {
-		if (!user.token) {
+		if (!isLoggedIn) {
 			navigate("/login");
 		}
-	}, [user.token, navigate]);
+	}, [isLoggedIn, navigate]);
 
 	function goTo(url) {
 		navigate(url);

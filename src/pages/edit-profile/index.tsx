@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as css from "./index.css";
 import { Text } from "../../ui/text";
 import { Button } from "../../ui/button";
@@ -7,11 +7,23 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { useSetDataUser } from "../../hooks/user-hooks";
 import { Status } from "../../ui/status";
+import { useCheckUserLogin } from "../../hooks/user-hooks";
+
 function EditProfile() {
 	const navigate = useNavigate();
 	const [error, setError] = useState("");
 	const [statusOpen, setStatusOpen] = useState(false);
 	const { user, setDataUser } = useSetDataUser();
+	//hook para saber si estoy logueado
+	const isLoggedIn = useCheckUserLogin();
+
+	//me envia a login si no estoy logueado
+	useEffect(() => {
+		if (!isLoggedIn) {
+			navigate("/login");
+		}
+	}, [isLoggedIn, navigate]);
+
 	const { register, handleSubmit } = useForm({
 		defaultValues: {
 			nombre: user.name,

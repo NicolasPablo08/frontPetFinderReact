@@ -13,7 +13,8 @@ import {
 	useGetPetsUser,
 } from "../../hooks/pets-hooks";
 import { Waiting } from "../../components/waiting";
-import { set } from "ol/transform";
+import { useCheckUserLogin } from "../../hooks/user-hooks";
+
 function EditReport() {
 	const { editReport } = useEditPetReport();
 	const { deletePetReport } = useDeletePetReport();
@@ -29,8 +30,15 @@ function EditReport() {
 	const { petsUser } = useGetPetsUser();
 	const params = useParams();
 	const petToEditId = parseInt(params.id); //pasamos a number el id que viene de la url
+	//hook para saber si estoy logueado
+	const isLoggedIn = useCheckUserLogin();
+	//me envia a login si no estoy logueado
+	useEffect(() => {
+		if (!isLoggedIn) {
+			navigate("/login");
+		}
+	}, [isLoggedIn, navigate]);
 
-	//const pets = JSON.parse(localStorage.getItem("petsUser")); //obtenemos los pets del localstorage
 	const petToEdit = petsUser.find((pet) => pet.petId === petToEditId);
 	// useEffect para llenar el formulario al iniciar
 	useEffect(() => {
@@ -58,9 +66,7 @@ function EditReport() {
 		const reader = new FileReader();
 		reader.onloadend = () => {
 			setFile(reader.result); // Guarda el objeto file de la imagen para el form
-			//console.log(reader.result);
 		};
-		//console.log(reader.readAsDataURL(selectedFile));
 		reader.readAsDataURL(selectedFile);
 	};
 

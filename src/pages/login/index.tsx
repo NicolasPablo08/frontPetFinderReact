@@ -7,17 +7,23 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { useLogIn } from "../../hooks/user-hooks";
 import { Status } from "../../ui/status";
+import { useCheckUserLogin } from "../../hooks/user-hooks";
 
 function Login() {
 	const navigate = useNavigate();
 	const [error, setError] = useState("");
 	const [statusOpen, setStatusOpen] = useState(false);
-
 	const { logIn } = useLogIn();
+	//hook para saber si estoy logueado
+	const isLoggedIn = useCheckUserLogin();
 
-	// useEffect(() => {
-	//   setError(message);
-	// }, [message]);
+	//me envia a profile si estoy logueado
+	useEffect(() => {
+		if (isLoggedIn) {
+			navigate("/profile");
+		}
+	}, [isLoggedIn, navigate]);
+
 	const { register, handleSubmit } = useForm();
 	async function formSubmit(data) {
 		if (!data.email || !data.password) {

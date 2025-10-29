@@ -3,7 +3,7 @@ import { atomWithStorage } from "jotai/utils";
 import { getCiudadProvincia } from "../map-hooks";
 import { userAtom } from "../user-hooks";
 
-const LOCAL_URL = "http://localhost:3000"; // Asegúrate de definir tu URL base
+const LOCAL_URL = process.env.REACT_APP_LOCAL_URL; //"http://localhost:3000"; // Asegúrate de definir tu URL base
 //de esta forma no solo creamos el atomo local sino que tambien lo guarda en el localStorage
 //sin localStorage seria const userAtom = atom({token: "", email: "", name: "", location: ""});
 const petsFromSeacrhAtom = atomWithStorage("petsFromSearch", []);
