@@ -11,15 +11,6 @@ if (dev) {
 	});
 }
 
-// Cargar variables de entorno desde .env
-const env = dotenv.config().parsed || {};
-
-// Mapear variables para DefinePlugin
-const envKeys = Object.keys(env).reduce((prev, next) => {
-	prev[`process.env.${next}`] = JSON.stringify(env[next]);
-	return prev;
-}, {});
-
 module.exports = {
 	watch: dev,
 	entry: "./src/index.tsx",
@@ -56,7 +47,9 @@ module.exports = {
 			"process.env.NODE_ENV": JSON.stringify(
 				process.env.NODE_ENV || "development"
 			),
+			"process.env.REACT_APP_LOCAL_URL": JSON.stringify(
+				process.env.REACT_APP_LOCAL_URL
+			),
 		}),
-		//new webpack.DefinePlugin(envKeys), // Usar las variables mapeadas
 	],
 };

@@ -4,7 +4,7 @@
 	"main": "index.js",
 	"license": "MIT",
 	"devDependencies": {
-		"@types/node": "^24.5.2",
+		"@types/node": "^24.10.0",
 		"@types/ol": "^6.5.3",
 		"live-server": "^1.2.2"
 	},
