@@ -2,7 +2,7 @@ const path = require("path");
 const webpack = require("webpack"); // Importa webpack
 const dotenv = require("dotenv"); // Importa dotenv
 dotenv.config(); // Carga las variables de entorno desde .env
-const CopyPlugin = require("copy-webpack-plugin"); //para copiar el indexedDB.html y las imagenes a dist
+const CopyPlugin = require("copy-webpack-plugin"); //para copiar el index.html y las imagenes a dist
 
 const dev = process.env.NODE_ENV == "development";
 
@@ -49,7 +49,7 @@ module.exports = {
 		new CopyPlugin({
 			patterns: [
 				{ from: "index.html", to: "" }, // Copia el index.html a dist/
-				{ from: "public/assets", to: "assets" }, // Copia la carpeta assets a dist/assets
+				{ from: "public", to: "" }, // Copia la carpeta public a dist/
 			],
 		}),
 	],
