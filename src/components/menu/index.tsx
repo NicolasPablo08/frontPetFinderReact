@@ -42,7 +42,7 @@ function Menu(props: MenuProps) {
 								{" "}
 								Mi perfil
 							</Text>
-							<Text href="/report" variant="linkMenu">
+							<Text href="/create-report" variant="linkMenu">
 								{" "}
 								Reportar mascota
 							</Text>

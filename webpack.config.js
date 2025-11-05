@@ -1,15 +1,9 @@
 const path = require("path");
 const webpack = require("webpack"); // Importa webpack
 const dotenv = require("dotenv"); // Importa dotenv
+dotenv.config(); // Carga las variables de entorno desde .env
+
 const dev = process.env.NODE_ENV == "development";
-const liveServer = require("live-server");
-if (dev) {
-	liveServer.start({
-		root: "./",
-		file: "index.html",
-		port: 3000,
-	});
-}
 
 module.exports = {
 	watch: dev,
@@ -52,4 +46,14 @@ module.exports = {
 			),
 		}),
 	],
+	devServer: {
+		//alternativa de webpack para servir app en desarrollo en vez de live-server
+		static: {
+			directory: path.join(__dirname, "."), // ubicacion del index.html (raiz)
+		},
+		historyApiFallback: true,
+		compress: true,
+		port: 4000,
+		hot: true, // Habilita hot reloading
+	},
 };

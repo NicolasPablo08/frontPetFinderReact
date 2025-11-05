@@ -6,7 +6,8 @@
 	"devDependencies": {
 		"@types/node": "^24.10.0",
 		"@types/ol": "^6.5.3",
-		"live-server": "^1.2.2"
+		"live-server": "^1.2.2",
+		"webpack-dev-server": "^5.2.2"
 	},
 	"dependencies": {
 		"@types/react": "18",
@@ -29,8 +30,7 @@
 		"webpack-cli": "^6.0.1"
 	},
 	"scripts": {
-		"dev": "cross-env NODE_ENV=development webpack",
-		"build": "cross-env NODE_ENV=production webpack",
-		"start": "live-server"
+		"dev": "webpack serve --mode development --open",
+		"build": "cross-env NODE_ENV=production webpack"
 	}
 }
