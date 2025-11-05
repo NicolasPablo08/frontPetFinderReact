@@ -45,6 +45,11 @@ module.exports = {
 				process.env.REACT_APP_LOCAL_URL
 			),
 		}),
+		new HtmlWebpackPlugin({
+			//para copiar el index html a la carpeta dist
+			template: "./index.html", // Ruta a tu archivo HTML en la raíz
+			filename: "index.html", // Nombre del archivo de salida en dist
+		}),
 	],
 	devServer: {
 		//alternativa de webpack para servir app en desarrollo en vez de live-server
