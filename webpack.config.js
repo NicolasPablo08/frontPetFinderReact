@@ -2,6 +2,7 @@ const path = require("path");
 const webpack = require("webpack"); // Importa webpack
 const dotenv = require("dotenv"); // Importa dotenv
 dotenv.config(); // Carga las variables de entorno desde .env
+const HtmlWebpackPlugin = require("html-webpack-plugin"); //para copiar el index html a la carpeta dist
 
 const dev = process.env.NODE_ENV == "development";
 
