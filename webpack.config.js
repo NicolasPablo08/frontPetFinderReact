@@ -49,7 +49,7 @@ module.exports = {
 		new CopyPlugin({
 			patterns: [
 				{ from: "index.html", to: "" }, // Copia el index.html a dist/
-				{ from: "public", to: "" }, // Copia la carpeta public a dist/
+				{ from: "public", to: "public" }, // Copia la carpeta public a dist/
 			],
 		}),
 	],
