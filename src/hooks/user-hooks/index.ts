@@ -2,7 +2,7 @@ import { useNavigate } from "react-router";
 import { atom, useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
-const LOCAL_URL = process.env.REACT_APP_LOCAL_URL; //|| "http://localhost:3000"; // Asegúrate de definir tu URL base
+const LOCAL_URL = process.env.REACT_APP_LOCAL_URL;
 
 //de esta forma no solo creamos el atomo local sino que tambien lo guarda en el localStorage
 //sin localStorage seria const userAtom = atom({token: "", email: "", name: "", location: ""});
@@ -182,6 +182,8 @@ const useGetCodePassword = () => {
 				body: JSON.stringify({ email }),
 			});
 			const data = await response.json();
+			console.log(data);
+
 			if (data.status === "success") {
 				setUserEmail((prev) => ({
 					...prev,
