@@ -14,7 +14,7 @@ function SearchPets() {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
   const [error, setError] = useState("");
-  const [errorClass, setErrorClass] = useState("status");
+  const [statusOpen, setStatusOpen] = useState(false);
   const [lastCoords, setLastCoords] = useState({
     lat: -34.6037,
     lng: -58.3816,
@@ -36,9 +36,9 @@ function SearchPets() {
     };
     if (!fullData.lat || !fullData.lng || !fullData.range) {
       setError("Todos los campos son obligatorios");
-      setErrorClass("status-error");
+      setStatusOpen(true);
       setTimeout(() => {
-        setErrorClass("status");
+        setStatusOpen(false);
       }, 3000);
       return;
     }
@@ -48,10 +48,10 @@ function SearchPets() {
       navigate("/pets-nearby");
     } else {
       setWaitingOpen(false);
-      setErrorClass("status-error");
+      setStatusOpen(true);
       setError(result.message);
       setTimeout(() => {
-        setErrorClass("status");
+        setStatusOpen(false);
       }, 3000);
     }
   }
@@ -81,7 +81,7 @@ function SearchPets() {
           </Button>
         </div>
       </div>
-      <Status className={css[errorClass]}>{error}</Status>
+      {statusOpen && <Status>{error}</Status>}
       {waitingOpen && <Waiting />}
     </div>
   );

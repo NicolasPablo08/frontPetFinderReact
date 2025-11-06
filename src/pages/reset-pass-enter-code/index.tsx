@@ -7,83 +7,84 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { Status } from "../../ui/status";
 import { useSendCodePassword } from "../../hooks/user-hooks";
+import { Waiting } from "../../components/waiting";
+import { set } from "ol/transform";
+
 function EnterCode() {
-	const navigate = useNavigate();
-	const { register, handleSubmit } = useForm();
-	const [error, setError] = useState("");
-	const [statusOpen, setStatusOpen] = useState(false);
-	const { sendCode } = useSendCodePassword();
+  const navigate = useNavigate();
+  const { register, handleSubmit } = useForm();
+  const [error, setError] = useState("");
+  const [statusOpen, setStatusOpen] = useState(false);
+  const { sendCode } = useSendCodePassword();
+  const [waitingOpen, setWaitingOpen] = useState(false);
 
-	//contador de tiempo
-	const [timeLeft, setTimeLeft] = useState(55); // Estado para el temporizador
+  //contador de tiempo
+  const [timeLeft, setTimeLeft] = useState(55); // Estado para el temporizador
 
-	useEffect(() => {
-		if (timeLeft > 0) {
-			const timer = setInterval(() => {
-				setTimeLeft((prev) => prev - 1);
-			}, 1000);
-			return () => clearInterval(timer); // Limpiar el intervalo al desmontar
-		}
-	}, [timeLeft]);
-	//si se agota el tiempo se redirecciona
-	useEffect(() => {
-		if (timeLeft === 0) {
-			setError("El tiempo se agotó, solicita un nuevo código.");
-			setStatusOpen(true);
-			const timeout = setTimeout(() => {
-				setStatusOpen(false);
-				navigate("/enter-email");
-			}, 3000);
-			return () => clearTimeout(timeout);
-		}
-	}, [timeLeft, navigate]);
+  useEffect(() => {
+    if (timeLeft > 0) {
+      const timer = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(timer); // Limpiar el intervalo al desmontar
+    }
+  }, [timeLeft]);
+  //si se agota el tiempo se redirecciona
+  useEffect(() => {
+    if (timeLeft === 0) {
+      setError("El tiempo se agotó, solicita un nuevo código.");
+      setStatusOpen(true);
+      const timeout = setTimeout(() => {
+        setStatusOpen(false);
+        navigate("/enter-email");
+      }, 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [timeLeft, navigate]);
 
-	async function formSubmit(data) {
-		//console.log(data);
-		const result = await sendCode(data.codigo);
-		if (result.status === "success") {
-			navigate("/reset-password");
-		} else {
-			setError(result.message);
-			setStatusOpen(true);
-			setTimeout(() => {
-				setStatusOpen(false);
-			}, 3000);
-		}
-	}
-	return (
-		<div>
-			<div className={css.root}>
-				<div className={css["text-container"]}>
-					<Text variant="title">Ingresar Código de Verificacion</Text>
-					<Text variant="subtitle">
-						Ingresá el codigo de verificacion que enviamos a tu email.
-					</Text>
-				</div>
-				<form className={css.form} onSubmit={handleSubmit(formSubmit)}>
-					<div>
-						<TextField register={register} name="codigo" type="text">
-							CÓDIGO
-						</TextField>
-						<div className={css.contador}>
-							{" "}
-							Validez del código: {timeLeft > 0 ? timeLeft : "Expirado"}
-						</div>
-					</div>
-					<Button type="submit" style="blue" className={css.button}>
-						Cambiar la contraseña
-					</Button>
-				</form>
-				<Button
-					type="button"
-					style="gray"
-					onClick={() => navigate("/enter-email")}
-				>
-					Volver a enviar el código
-				</Button>
-			</div>
-			{statusOpen && <Status>{error}</Status>}
-		</div>
-	);
+  async function formSubmit(data) {
+    //console.log(data);
+    setWaitingOpen(true);
+    const result = await sendCode(data.codigo);
+    if (result.status === "success") {
+      navigate("/reset-password");
+    } else {
+      setWaitingOpen(false);
+      setError(result.message);
+      setStatusOpen(true);
+      setTimeout(() => {
+        setStatusOpen(false);
+      }, 3000);
+    }
+  }
+  return (
+    <div>
+      <div className={`${css.root} ${waitingOpen && css.waiting}`}>
+        <div className={css["text-container"]}>
+          <Text variant="title">Ingresar Código de Verificacion</Text>
+          <Text variant="subtitle">Ingresá el codigo de verificacion que enviamos a tu email.</Text>
+        </div>
+        <form className={css.form} onSubmit={handleSubmit(formSubmit)}>
+          <div>
+            <TextField register={register} name="codigo" type="text">
+              CÓDIGO
+            </TextField>
+            <div className={css.contador}>
+              {" "}
+              Validez del código: {timeLeft > 0 ? timeLeft : "Expirado"}
+            </div>
+          </div>
+          <Button type="submit" style="blue" className={css.button}>
+            Cambiar la contraseña
+          </Button>
+        </form>
+        <Button type="button" style="gray" onClick={() => navigate("/enter-email")}>
+          Volver a enviar el código
+        </Button>
+      </div>
+      {statusOpen && <Status>{error}</Status>}
+      {waitingOpen && <Waiting />}
+    </div>
+  );
 }
 export { EnterCode };
